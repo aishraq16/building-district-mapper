@@ -1,0 +1,29 @@
+{
+  "name": "building-district-mapper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aishraq16/building-district-mapper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/aishraq16/building-district-mapper/issues"
+  },
+  "homepage": "https://github.com/aishraq16/building-district-mapper#readme",
+  "dependencies": {
+    "@turf/turf": "^7.3.5",
+    "dotenv": "^17.4.2",
+    "mongodb": "^7.5.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.6"
+  }
+}
