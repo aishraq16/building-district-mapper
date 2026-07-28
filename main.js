@@ -24,11 +24,6 @@ const buildings = db.collection("property_buildings");
 const count = await buildings.countDocuments();
 console.log("Buildings count:", count);
 
-function calculateHaversineDistance(coordA, coordB){
-
-}
-
-
 async function getBuildingsMissingDistrictId(){
 
   const result = await buildings.find({
@@ -52,6 +47,17 @@ async function getDistrictReferenceBuildings(){
   "location.geolocation.longitude": { $type: "number" }
   }).toArray();
   return result;
+}
+
+function getBuildingCoordinates(building) {
+  return [
+    building.location.geolocation.longitude,
+    building.location.geolocation.latitude,
+  ];
+}
+
+function findNearestBuildings(building){
+
 }
 
 function getMajorityDistrictVote(){
