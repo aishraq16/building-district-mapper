@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { MongoClient } from "mongodb";
+import { distance } from "@turf/turf"
 
 const connectionURI = process.env.MONGO_URI;
 const dbName = process.env.MONGO_DB;
@@ -14,43 +15,43 @@ if (!dbName) {
 
 const client = new MongoClient(connectionURI);
 
-try {
-  await client.connect();
-  console.log("Connected to MongoDB");
+await client.connect();
+console.log("Connected to MongoDB");
 
-  const db = client.db(dbName);
-  const buildings = db.collection("property_buildings");
+const db = client.db(dbName);
+const buildings = db.collection("property_buildings");
 
-  const count = await buildings.countDocuments();
-  console.log("Buildings count:", count);
-} finally {
-  await client.close();
-}
+const count = await buildings.countDocuments();
+console.log("Buildings count:", count);
 
 function calculateHaversineDistance(coordA, coordB){
 
 }
 
 
-function getBuildingsMissingDistrictId(){
+async function getBuildingsMissingDistrictId(){
 
-  const result = await buildings.findOne({
+  const result = await buildings.find({
   $or: [
     { districtId: { $exists: false } },
     { districtId: null },
-    { districtId: "" }
-  ]
-});
+    { districtId: "" },
+  ],   
+  "location.geolocation.latitude": { $type: "number" },
+  "location.geolocation.longitude": { $type: "number" }
+}).toArray();
 
 return result;
 }
 
-function getDistrictReferenceBuildings(){
+async function getDistrictReferenceBuildings(){
   //implement later
-}
-
-function findNearestReferenceBuildings(){
-  //implement later
+  const result = await buildings.find({
+  districtId: { $exists: true, $nin: [null, ""] },
+  "location.geolocation.latitude": { $type: "number" },
+  "location.geolocation.longitude": { $type: "number" }
+  }).toArray();
+  return result;
 }
 
 function getMajorityDistrictVote(){
@@ -61,4 +62,11 @@ function inferDistrictIdForBuilding(){
   //implement later
 }
 
-//console.log(getBuildingsMissingDistrictId().countDocuments())
+const buildingsWithMissingDistrictId = await getBuildingsMissingDistrictId();
+const districtReferenceBuildings = await getDistrictReferenceBuildings();
+
+
+console.log(buildingsWithMissingDistrictId.length)
+console.log(districtReferenceBuildings.length)
+
+await client.close();
