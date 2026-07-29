@@ -1,7 +1,7 @@
 //imports 
 import "dotenv/config";
 import { MongoClient } from "mongodb";
-import { distance } from "@turf/turf"
+import { distance } from "@turf/turf";
 
 //get the connection string and db name from the env file
 const connectionURI = process.env.MONGO_URI;
@@ -33,13 +33,12 @@ console.log("Buildings count:", count);
 
 function getCoordinates(building){
   return { 
-    "lattitude" : building.location.geolocation.latitude,
-    "longitude" : building.location.geolocation.longitude
+    latitude : building.location.geolocation.latitude,
+    longitude : building.location.geolocation.longitude
    }
 }
 
 async function getBuildingsMissingDistrictId(){
-//
   const result = await buildings.find({
   $or: [
     { districtId: { $exists: false } },
@@ -62,15 +61,15 @@ async function getDistrictReferenceBuildings(){
   return result;
 }
 
-function getBuildingCoordinates(building) {
+/*function getBuildingCoordinates(building) {
   return [
     building.location.geolocation.longitude,
     building.location.geolocation.latitude,
   ];
-}
+}*/
 
 function findNearestBuildings(building, maxDistanceAllowed, buildingsToCheck){
-
+  const { latitude, longitude } = getCoordinates(building);
 }
 
 function getMajorityDistrictVote(){
@@ -88,18 +87,28 @@ const districtReferenceBuildings = await getDistrictReferenceBuildings();
 const maxDistanceAllowed = 1000; 
 const buildingsToCheck = 7;
 
-/*
+
 buildingsWithMissingDistrictId.forEach(building => {
   const nearestBuildings = findNearestBuildings(building, maxDistanceAllowed, buildingsToCheck)
+  nearestBuildings.forEach(refBuilding => {
+
+  });
+  //console.log(`Nearest building is ${distance}`)
 });
-*/
+
+
 /*
 console.log(buildingsWithMissingDistrictId.length)
 console.log(districtReferenceBuildings.length)
 */
 
-const fromPoint = point(buildingsWithMissingDistrictId[0]);
-const toPoint = point(districtReferenceBuildings[0]);
-const distanceInMeters = distance(fromPoint, toPoint, { units: "meters" });
+/*
+const distanceInMeters = distance(
+  getBuildingCoordinates(buildingsWithMissingDistrictId[0]),
+  getBuildingCoordinates(districtReferenceBuildings[0]),
+  { units: "meters" }
+);
+
 console.log(distanceInMeters)
+*/
 await client.close();
