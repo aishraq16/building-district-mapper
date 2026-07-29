@@ -69,7 +69,20 @@ async function getDistrictReferenceBuildings(){
 }*/
 
 function findNearestBuildings(building, maxDistanceAllowed, buildingsToCheck){
-  const { latitude, longitude } = getCoordinates(building);
+  const { latitude: lat1, longitude: lng1 } = getCoordinates(building);
+  let result = []
+  districtReferenceBuildings.forEach(refBuilding => {
+    const { latitude: lat2, longitude: lng2 } = getCoordinates(refBuilding);
+    const dist = distance([lng1, lat1], [lng2, lat2], { units: "meters" })
+    if (dist <= maxDistanceAllowed) {
+      result.push({
+      distance : dist,
+      districtId : refBuilding.districtId
+      });
+    }
+  });
+  result.sort((a, b) => a.distance - b.distance);
+  return result.slice(0, buildingsToCheck);
 }
 
 function getMajorityDistrictVote(){
@@ -87,7 +100,7 @@ const districtReferenceBuildings = await getDistrictReferenceBuildings();
 const maxDistanceAllowed = 1000; 
 const buildingsToCheck = 7;
 
-
+/*
 buildingsWithMissingDistrictId.forEach(building => {
   const nearestBuildings = findNearestBuildings(building, maxDistanceAllowed, buildingsToCheck)
   nearestBuildings.forEach(refBuilding => {
@@ -111,4 +124,5 @@ const distanceInMeters = distance(
 
 console.log(distanceInMeters)
 */
+console.log(findNearestBuildings(buildingsWithMissingDistrictId[0], 1000, 7));
 await client.close();
