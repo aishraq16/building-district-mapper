@@ -69,7 +69,7 @@ function getBuildingCoordinates(building) {
   ];
 }
 
-function findNearestBuildings(building){
+function findNearestBuildings(building, maxDistanceAllowed, buildingsToCheck){
 
 }
 
@@ -85,7 +85,15 @@ const buildingsWithMissingDistrictId = await getBuildingsMissingDistrictId();
 const districtReferenceBuildings = await getDistrictReferenceBuildings();
 
 
+const maxDistanceAllowed = 1000; 
+const buildingsToCheck = 7;
+
+/*
+buildingsWithMissingDistrictId.forEach(building => {
+  const nearestBuildings = findNearestBuildings(building, maxDistanceAllowed, buildingsToCheck)
+});
+/*
 console.log(buildingsWithMissingDistrictId.length)
 console.log(districtReferenceBuildings.length)
-
+*/
 await client.close();
