@@ -92,8 +92,14 @@ const buildingsToCheck = 7;
 buildingsWithMissingDistrictId.forEach(building => {
   const nearestBuildings = findNearestBuildings(building, maxDistanceAllowed, buildingsToCheck)
 });
+*/
 /*
 console.log(buildingsWithMissingDistrictId.length)
 console.log(districtReferenceBuildings.length)
 */
+
+const fromPoint = point(buildingsWithMissingDistrictId[0]);
+const toPoint = point(districtReferenceBuildings[0]);
+const distanceInMeters = distance(fromPoint, toPoint, { units: "meters" });
+console.log(distanceInMeters)
 await client.close();
